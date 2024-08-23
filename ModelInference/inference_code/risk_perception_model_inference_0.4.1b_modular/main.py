@@ -21,7 +21,7 @@ def main():
         if os.path.exists(input_directory):
             files = [os.path.join(input_directory, f) for f in os.listdir(input_directory)
                      if f.endswith(('.jpg', '.jpeg', '.png'))]
-            files.sort(key=lambda x: os.path.getmtime(x))
+            files.sort(key=lambda x: os.path.basename(x))
 
             for file_path in files:
                 filename = os.path.basename(file_path)
