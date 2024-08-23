@@ -2,7 +2,7 @@ import torch
 import cv2
 
 # YOLOv5 모델 로드
-model = torch.hub.load('yolov5', 'custom', path='best_0.3.0.pt', source='local')
+model = torch.hub.load('yolov5', 'custom', path='model/best_0.3.0.pt', source='local')
 
 
 def detect_objects(image_path, model):

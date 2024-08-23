@@ -7,7 +7,7 @@ from collections import deque
 from deep_sort_realtime.deepsort_tracker import DeepSort
 
 # YOLOv5 모델 로드
-model = torch.hub.load('yolov5', 'custom', path='best_0.3.0.pt', source='local')
+model = torch.hub.load('yolov5', 'custom', path='model/best_0.3.0.pt', source='local')
 
 # DeepSort 초기화
 deepsort = DeepSort(max_age=30, n_init=3, nms_max_overlap=1.0, max_cosine_distance=0.2, nn_budget=100)
