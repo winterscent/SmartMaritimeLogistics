@@ -4,7 +4,10 @@ import torch
 import cv2
 
 # YOLOv5 모델 로드
-model = torch.hub.load('yolov5', 'custom', path='best_0.3.1.pt', source='local')
+model = torch.hub.load('/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/yolov5',
+                       'custom',
+                       path='/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/model/best_0.3.1.pt',
+                       source='local')
 
 # 추적 대상 클래스
 # 대상 클래스, 프레임 당 비율 변화, 화재/연기 감지 프레임, 관심/경고/위험 이미지 비율 모두 여기서 조정 가능
@@ -111,7 +114,7 @@ def track_object(class_name, area_ratio):
 
 
 def main():
-    input_directory = 'input/imagedata/fl1'
+    input_directory = '/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/input/imagedata/fl1'
     processed_files = set()
 
     while True:

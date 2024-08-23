@@ -7,7 +7,10 @@ from collections import deque
 from deep_sort_realtime.deepsort_tracker import DeepSort
 
 # YOLOv5 모델 로드
-model = torch.hub.load('yolov5', 'custom', path='best_0.3.1.pt', source='local')
+model = torch.hub.load('/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/yolov5',
+                       'custom',
+                       path='/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/model/best_0.3.1.pt',
+                       source='local')
 
 # DeepSort 초기화
 deepsort = DeepSort(max_age=30, n_init=3, nms_max_overlap=1.0, max_cosine_distance=0.2, nn_budget=100)
@@ -145,7 +148,7 @@ def track_object(class_name, area_ratio):
 
 
 def main():
-    input_directory = 'input/imagedata/fl1'
+    input_directory = '/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/input/imagedata/fl1'
     processed_files = set()
 
     while True:

@@ -8,7 +8,7 @@ def main():
     processed_files = set()
 
     track_classes = ['car', 'truck', 'van', 'forklift', 'fire', 'smoke']
-    model_path = '/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/best_0.3.1.pt'
+    model_path = '/Users/winterscent/DevWorkSpace/PythonWorkSpace/SmartMaritimeLogistics/ModelInference/model/best_0.3.1.pt'
 
     # ObjectTracker 인스턴스를 생성합니다.
     tracker = ObjectTracker(frame_check_threshold=3, fire_smoke_frame_check_threshold=5,
