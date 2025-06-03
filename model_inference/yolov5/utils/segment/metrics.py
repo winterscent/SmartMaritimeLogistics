@@ -29,10 +29,24 @@ def ap_per_class_box_and_mask(
         other arguments see `func: ap_per_class`.
     """
     results_boxes = ap_per_class(
-        tp_b, conf, pred_cls, target_cls, plot=plot, save_dir=save_dir, names=names, prefix="Box"
+        tp_b,
+        conf,
+        pred_cls,
+        target_cls,
+        plot=plot,
+        save_dir=save_dir,
+        names=names,
+        prefix="Box",
     )[2:]
     results_masks = ap_per_class(
-        tp_m, conf, pred_cls, target_cls, plot=plot, save_dir=save_dir, names=names, prefix="Mask"
+        tp_m,
+        conf,
+        pred_cls,
+        target_cls,
+        plot=plot,
+        save_dir=save_dir,
+        names=names,
+        prefix="Mask",
     )[2:]
 
     return {

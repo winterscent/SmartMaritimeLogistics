@@ -28,11 +28,14 @@ class TritonRemoteModel:
             self.client = InferenceServerClient(parsed_url.netloc)  # Triton GRPC client
             model_repository = self.client.get_model_repository_index()
             self.model_name = model_repository.models[0].name
-            self.metadata = self.client.get_model_metadata(self.model_name, as_json=True)
+            self.metadata = self.client.get_model_metadata(
+                self.model_name, as_json=True
+            )
 
             def create_input_placeholders() -> typing.List[InferInput]:
                 return [
-                    InferInput(i["name"], [int(s) for s in i["shape"]], i["datatype"]) for i in self.metadata["inputs"]
+                    InferInput(i["name"], [int(s) for s in i["shape"]], i["datatype"])
+                    for i in self.metadata["inputs"]
                 ]
 
         else:
@@ -45,7 +48,8 @@ class TritonRemoteModel:
 
             def create_input_placeholders() -> typing.List[InferInput]:
                 return [
-                    InferInput(i["name"], [int(s) for s in i["shape"]], i["datatype"]) for i in self.metadata["inputs"]
+                    InferInput(i["name"], [int(s) for s in i["shape"]], i["datatype"])
+                    for i in self.metadata["inputs"]
                 ]
 
         self._create_input_placeholders_fn = create_input_placeholders
@@ -55,7 +59,9 @@ class TritonRemoteModel:
         """Returns the model runtime."""
         return self.metadata.get("backend", self.metadata.get("platform"))
 
-    def __call__(self, *args, **kwargs) -> typing.Union[torch.Tensor, typing.Tuple[torch.Tensor, ...]]:
+    def __call__(
+        self, *args, **kwargs
+    ) -> typing.Union[torch.Tensor, typing.Tuple[torch.Tensor, ...]]:
         """
         Invokes the model.
 
@@ -81,7 +87,9 @@ class TritonRemoteModel:
         placeholders = self._create_input_placeholders_fn()
         if args_len:
             if args_len != len(placeholders):
-                raise RuntimeError(f"Expected {len(placeholders)} inputs, got {args_len}.")
+                raise RuntimeError(
+                    f"Expected {len(placeholders)} inputs, got {args_len}."
+                )
             for input, value in zip(placeholders, args):
                 input.set_data_from_numpy(value.cpu().numpy())
         else:

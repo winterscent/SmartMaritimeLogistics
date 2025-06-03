@@ -3,7 +3,7 @@
 name: ❓ Question
 description: Ask a YOLOv5 question
 # title: " "
-labels: [question]
+labels: [ question ]
 body:
   - type: markdown
     attributes:

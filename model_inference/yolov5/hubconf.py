@@ -13,7 +13,15 @@ Usage:
 import torch
 
 
-def _create(name, pretrained=True, channels=3, classes=80, autoshape=True, verbose=True, device=None):
+def _create(
+    name,
+    pretrained=True,
+    channels=3,
+    classes=80,
+    autoshape=True,
+    verbose=True,
+    device=None,
+):
     """
     Creates or loads a YOLOv5 model, with options for pretrained weights and model customization.
 
@@ -60,14 +68,20 @@ def _create(name, pretrained=True, channels=3, classes=80, autoshape=True, verbo
 
     if not verbose:
         LOGGER.setLevel(logging.WARNING)
-    check_requirements(ROOT / "requirements.txt", exclude=("opencv-python", "tensorboard", "thop"))
+    check_requirements(
+        ROOT / "requirements.txt", exclude=("opencv-python", "tensorboard", "thop")
+    )
     name = Path(name)
-    path = name.with_suffix(".pt") if name.suffix == "" and not name.is_dir() else name  # checkpoint path
+    path = (
+        name.with_suffix(".pt") if name.suffix == "" and not name.is_dir() else name
+    )  # checkpoint path
     try:
         device = select_device(device)
         if pretrained and channels == 3 and classes == 80:
             try:
-                model = DetectMultiBackend(path, device=device, fuse=autoshape)  # detection model
+                model = DetectMultiBackend(
+                    path, device=device, fuse=autoshape
+                )  # detection model
                 if autoshape:
                     if model.pt and isinstance(model.model, ClassificationModel):
                         LOGGER.warning(
@@ -80,16 +94,24 @@ def _create(name, pretrained=True, channels=3, classes=80, autoshape=True, verbo
                             "You will not be able to run inference with this model."
                         )
                     else:
-                        model = AutoShape(model)  # for file/URI/PIL/cv2/np inputs and NMS
+                        model = AutoShape(
+                            model
+                        )  # for file/URI/PIL/cv2/np inputs and NMS
             except Exception:
                 model = attempt_load(path, device=device, fuse=False)  # arbitrary model
         else:
-            cfg = list((Path(__file__).parent / "models").rglob(f"{path.stem}.yaml"))[0]  # model.yaml path
+            cfg = list((Path(__file__).parent / "models").rglob(f"{path.stem}.yaml"))[
+                0
+            ]  # model.yaml path
             model = DetectionModel(cfg, channels, classes)  # create model
             if pretrained:
                 ckpt = torch.load(attempt_download(path), map_location=device)  # load
-                csd = ckpt["model"].float().state_dict()  # checkpoint state_dict as FP32
-                csd = intersect_dicts(csd, model.state_dict(), exclude=["anchors"])  # intersect
+                csd = (
+                    ckpt["model"].float().state_dict()
+                )  # checkpoint state_dict as FP32
+                csd = intersect_dicts(
+                    csd, model.state_dict(), exclude=["anchors"]
+                )  # intersect
                 model.load_state_dict(csd, strict=False)  # load
                 if len(ckpt["model"].names) == classes:
                     model.names = ckpt["model"].names  # set class names attribute
@@ -98,7 +120,9 @@ def _create(name, pretrained=True, channels=3, classes=80, autoshape=True, verbo
         return model.to(device)
 
     except Exception as e:
-        help_url = "https://docs.ultralytics.com/yolov5/tutorials/pytorch_hub_model_loading"
+        help_url = (
+            "https://docs.ultralytics.com/yolov5/tutorials/pytorch_hub_model_loading"
+        )
         s = f"{e}. Cache may be out of date, try `force_reload=True` or see {help_url} for help."
         raise Exception(s) from e
 
@@ -135,7 +159,9 @@ def custom(path="path/to/model.pt", autoshape=True, _verbose=True, device=None):
     return _create(path, autoshape=autoshape, verbose=_verbose, device=device)
 
 
-def yolov5n(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5n(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Instantiates the YOLOv5-nano model with options for pretraining, input channels, class count, autoshaping,
     verbosity, and device.
@@ -170,10 +196,14 @@ def yolov5n(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=Tr
         model = yolov5n(device='cuda')
         ```
     """
-    return _create("yolov5n", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5n", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5s(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5s(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Create a YOLOv5-small (yolov5s) model with options for pretraining, input channels, class count, autoshaping,
     verbosity, and device configuration.
@@ -212,10 +242,14 @@ def yolov5s(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=Tr
         For more details on model loading and customization, visit
         the [YOLOv5 PyTorch Hub Documentation](https://pytorch.org/hub/ultralytics_yolov5).
     """
-    return _create("yolov5s", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5s", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5m(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5m(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Instantiates the YOLOv5-medium model with customizable pretraining, channel count, class count, autoshaping,
     verbosity, and device.
@@ -245,10 +279,14 @@ def yolov5m(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=Tr
 
     For more information, visit https://pytorch.org/hub/ultralytics_yolov5.
     """
-    return _create("yolov5m", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5m", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5l(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5l(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Creates YOLOv5-large model with options for pretraining, channels, classes, autoshaping, verbosity, and device
     selection.
@@ -276,10 +314,14 @@ def yolov5l(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=Tr
         For additional details, refer to the PyTorch Hub models documentation:
         https://pytorch.org/hub/ultralytics_yolov5
     """
-    return _create("yolov5l", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5l", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5x(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5x(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Perform object detection using the YOLOv5-xlarge model with options for pretraining, input channels, class count,
     autoshaping, verbosity, and device specification.
@@ -307,10 +349,14 @@ def yolov5x(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=Tr
     For additional details, refer to the official YOLOv5 PyTorch Hub models documentation:
     https://pytorch.org/hub/ultralytics_yolov5
     """
-    return _create("yolov5x", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5x", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5n6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5n6(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Creates YOLOv5-nano-P6 model with options for pretraining, channels, classes, autoshaping, verbosity, and device.
 
@@ -335,10 +381,14 @@ def yolov5n6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=T
     Notes:
         For more information on PyTorch Hub models, visit: https://pytorch.org/hub/ultralytics_yolov5
     """
-    return _create("yolov5n6", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5n6", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5s6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5s6(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Instantiate the YOLOv5-small-P6 model with options for pretraining, input channels, number of classes, autoshaping,
     verbosity, and device selection.
@@ -373,10 +423,14 @@ def yolov5s6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=T
         Exception: If there is an error during model creation or loading, with a suggestion to visit the YOLOv5
             tutorials for help.
     """
-    return _create("yolov5s6", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5s6", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5m6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5m6(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Create YOLOv5-medium-P6 model with options for pretraining, channel count, class count, autoshaping, verbosity, and
     device.
@@ -408,10 +462,14 @@ def yolov5m6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=T
         - The model can be loaded with pre-trained weights for better performance on specific tasks.
         - The autoshape feature simplifies input handling by allowing various popular data formats.
     """
-    return _create("yolov5m6", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5m6", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5l6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5l6(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Instantiate the YOLOv5-large-P6 model with options for pretraining, channel and class counts, autoshaping,
     verbosity, and device selection.
@@ -440,10 +498,14 @@ def yolov5l6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=T
     Note:
         Refer to [PyTorch Hub Documentation](https://pytorch.org/hub/ultralytics_yolov5) for additional usage instructions.
     """
-    return _create("yolov5l6", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5l6", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
-def yolov5x6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None):
+def yolov5x6(
+    pretrained=True, channels=3, classes=80, autoshape=True, _verbose=True, device=None
+):
     """
     Creates the YOLOv5-xlarge-P6 model with options for pretraining, number of input channels, class count, autoshaping,
     verbosity, and device selection.
@@ -470,7 +532,9 @@ def yolov5x6(pretrained=True, channels=3, classes=80, autoshape=True, _verbose=T
         For more information on YOLOv5 models, visit the official documentation:
         https://docs.ultralytics.com/yolov5
     """
-    return _create("yolov5x6", pretrained, channels, classes, autoshape, _verbose, device)
+    return _create(
+        "yolov5x6", pretrained, channels, classes, autoshape, _verbose, device
+    )
 
 
 if __name__ == "__main__":
@@ -489,7 +553,14 @@ if __name__ == "__main__":
     print_args(vars(opt))
 
     # Model
-    model = _create(name=opt.model, pretrained=True, channels=3, classes=80, autoshape=True, verbose=True)
+    model = _create(
+        name=opt.model,
+        pretrained=True,
+        channels=3,
+        classes=80,
+        autoshape=True,
+        verbose=True,
+    )
     # model = custom(path='path/to/model.pt')  # custom
 
     # Images

@@ -3,7 +3,7 @@
 name: 🚀 Feature Request
 description: Suggest a YOLOv5 idea
 # title: " "
-labels: [enhancement]
+labels: [ enhancement ]
 body:
   - type: markdown
     attributes:

@@ -3,7 +3,7 @@
 name: 🐛 Bug Report
 # title: " "
 description: Problems with YOLOv5
-labels: [bug, triage]
+labels: [ bug, triage ]
 body:
   - type: markdown
     attributes:

@@ -18,7 +18,7 @@ if str(ROOT) not in sys.path:
 RANK = int(os.getenv("RANK", -1))
 DEPRECATION_WARNING = (
     f"{colorstr('wandb')}: WARNING ⚠️ wandb is deprecated and will be removed in a future release. "
-    f'See supported integrations at https://github.com/ultralytics/yolov5#integrations.'
+    f"See supported integrations at https://github.com/ultralytics/yolov5#integrations."
 )
 
 try:
@@ -68,7 +68,9 @@ class WandbLogger:
             self.wandb_run = wandb.run or wandb.init(
                 config=opt,
                 resume="allow",
-                project="YOLOv5" if opt.project == "runs/train" else Path(opt.project).stem,
+                project=(
+                    "YOLOv5" if opt.project == "runs/train" else Path(opt.project).stem
+                ),
                 entity=opt.entity,
                 name=opt.name if opt.name != "exp" else None,
                 job_type=job_type,
@@ -101,7 +103,15 @@ class WandbLogger:
             if model_dir:
                 self.weights = Path(model_dir) / "last.pt"
                 config = self.wandb_run.config
-                opt.weights, opt.save_period, opt.batch_size, opt.bbox_interval, opt.epochs, opt.hyp, opt.imgsz = (
+                (
+                    opt.weights,
+                    opt.save_period,
+                    opt.batch_size,
+                    opt.bbox_interval,
+                    opt.epochs,
+                    opt.hyp,
+                    opt.imgsz,
+                ) = (
                     str(self.weights),
                     config.save_period,
                     config.batch_size,
@@ -112,9 +122,13 @@ class WandbLogger:
                 )
 
         if opt.bbox_interval == -1:
-            self.bbox_interval = opt.bbox_interval = (opt.epochs // 10) if opt.epochs > 10 else 1
+            self.bbox_interval = opt.bbox_interval = (
+                (opt.epochs // 10) if opt.epochs > 10 else 1
+            )
             if opt.evolve or opt.noplots:
-                self.bbox_interval = opt.bbox_interval = opt.epochs + 1  # disable bbox_interval
+                self.bbox_interval = opt.bbox_interval = (
+                    opt.epochs + 1
+                )  # disable bbox_interval
 
     def log_model(self, path, opt, epoch, fitness_score, best_model=False):
         """
